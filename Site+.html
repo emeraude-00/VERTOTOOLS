@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VERTO SITE - Solutions Digitales & Créatives</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- retiré l'attribut integrity vide pour éviter les warnings -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+
+  <style>
+    :root{
+      --primary:#2ecc71;
+      --secondary:#27ae60;
+      --dark:#1a4d2e;
+      --light-bg:#f6faf6;
+      --white:#ffffff;
+      --muted:#666;
+      --glass-bg: rgba(255,255,255,0.12);
+      --glass-border: rgba(255,255,255,0.18);
+      --shadow: 0 12px 30px rgba(10,20,10,0.08);
+      --max-width: 1200px;
+      --nav-break: 900px; /* breakpoint used for nav/mobile changes */
+    }
+
+    /* Base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      color:#222;
+      background:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+    }
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+
+    /* Header / Nav */
+    header{position:fixed;top:20px;left:0;right:0;z-index:1200;display:flex;justify-content:center;pointer-events:none}
+    .nav-container{
+      pointer-events:auto;
+      width:90%;max-width:var(--max-width);
+      background:rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-radius:50px;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 22px;box-shadow:var(--shadow);
+      transition: all .35s ease;
+      gap:12px;
+    }
+    .logo{font-weight:700;font-size:20px;color:var(--dark)}
+    .logo span{color:var(--primary)}
+
+    /* Desktop nav (default) */
+    nav[aria-label="Main"]{display:flex;gap:18px;align-items:center}
+    nav a{font-weight:500;font-size:14px;color:#333}
+    .btn-header-wa{
+      display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;padding:8px 16px;border-radius:28px;font-weight:600;font-size:13px;
+    }
+
+    /* Mobile nav toggle button: three vertical bars side-by-side */
+    #nav-toggle{
+      display:none;
+      background:transparent;border:0;padding:6px;cursor:pointer;border-radius:8px;
+      align-items:center;gap:6px;
+    }
+    #nav-toggle:focus{outline:2px solid rgba(11,118,209,0.18);outline-offset:3px}
+
+    .nav-bar{width:4px;height:20px;background:var(--dark);display:inline-block;border-radius:3px}
+
+    /* Mobile nav panel (hidden by default) - we'll reuse the same <nav> element and change its layout */
+    nav.main-nav-mobile {
+      display:none;
+      position:fixed;
+      left:12px;
+      right:12px;
+      top:84px;
+      background:var(--white);
+      border-radius:14px;
+      padding:12px;
+      box-shadow:0 18px 40px rgba(10,20,10,0.12);
+      z-index:1250;
+      border:1px solid rgba(10,20,10,0.04);
+    }
+    nav.main-nav-mobile.open { display:block; }
+
+    nav.main-nav-mobile ul { list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px }
+    nav.main-nav-mobile a { display:block;padding:10px;border-radius:8px;color:var(--dark);font-weight:700 }
+    nav.main-nav-mobile a:hover { background:rgba(11,118,209,0.04) }
+
+    /* Desktop nav layout: inline links */
+    .nav-links { display:flex; gap:18px; align-items:center }
+
+    /* hide the mobile floating summary by default, we'll add later */
+    .summary-panel{display:none}
+
+    /* Hero */
+    .hero{
+      min-height:80vh;
+      height:100vh;
+      display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;
+      background:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.35)),
+        url('https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/58af073981c72276222fdfc782aa1795.jpg') center/cover no-repeat;
+      position:relative;padding:0 20px;
+    }
+    .hero-content{max-width:900px;padding:32px}
+    .hero .section-tag{color:rgba(255,255,255,0.9);opacity:.9}
+    .hero h1{font-size:clamp(2rem,5vw,3.2rem);margin:14px 0 18px;line-height:1.12}
+    .hero p{font-size:1.05rem;opacity:.95;margin-bottom:22px}
+    .btn-main{background:var(--primary);color:#fff;padding:14px 28px;border-radius:50px;font-weight:700;display:inline-flex;gap:10px;align-items:center}
+
+    /* wave divider */
+    .wave-divider{position:absolute;bottom:-1px;left:0;width:100%;height:100px;fill:var(--white)}
+
+    main{padding-top:120px}
+
+    /* Sections */
+    section{padding:72px 5%;max-width:var(--max-width);margin:0 auto}
+    .section-tag{color:var(--primary);font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:1.6px;display:block;margin-bottom:10px}
+    .section-title{font-size:1.8rem;color:var(--dark);margin-bottom:28px}
+
+    /* grid cards */
+    .service-bg{background:var(--light-bg);padding:30px 0}
+    .grid-cards{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{
+      background:var(--white);
+      padding:22px;border-radius:18px;display:flex;flex-direction:column;justify-content:space-between;
+      transition:all .35s ease;box-shadow:var(--shadow);border:1px solid rgba(10,20,10,0.03)
+    }
+    .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(10,20,10,0.09);border-color:var(--primary)}
+    .card i{font-size:30px;color:var(--primary);margin-bottom:12px}
+    .card h3{margin:0 0 8px;font-size:1.1rem;color:var(--dark)}
+    .card p{font-size:13px;color:var(--muted);margin-bottom:12px}
+    .price-tag{font-weight:700;color:var(--primary);margin-bottom:12px;font-size:1rem;display:inline-block}
+    .btn-wa-sm{display:inline-block;background:var(--dark);color:#fff;padding:9px 14px;border-radius:10px;font-weight:700;font-size:13px}
+
+    /* marque "Sur devis" */
+    .badge-quote{display:inline-block;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;padding:6px 10px;border-radius:999px;font-weight:700;font-size:13px}
+
+    /* pricing table */
+    .pricing-table{width:100%;border-collapse:collapse;margin-top:10px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+    .pricing-table th{background:var(--dark);color:#fff;padding:12px;font-weight:600}
+    .pricing-table td{padding:10px;text-align:center;border-bottom:1px solid #f1f1f1;color:var(--muted);font-weight:600}
+
+    /* gallery */
+    .gallery-container{padding-bottom:6px}
+    .gallery-scroll{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x mandatory}
+    .gallery-item{flex:0 0 280px;height:380px;scroll-snap-align:start;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+    .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+    .gallery-item:hover img{transform:scale(1.03)}
+    .gallery-note{font-size:13px;color:var(--muted);margin-top:12px;border-left:3px solid var(--primary);padding-left:10px}
+
+    /* testimonials / steps */
+    .testi-grid,.steps-container{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+    .testi-card{background:#fff;padding:20px;border-radius:14px;box-shadow:var(--shadow);text-align:left;display:flex;gap:14px;align-items:flex-start}
+    .testi-content{flex:1}
+    .testi-name{font-weight:700;color:var(--dark);margin-bottom:4px}
+    .testi-pronoun{color:var(--muted);font-size:0.95rem;margin-left:8px;font-weight:600}
+    .testi-role{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .testi-text{font-size:14px;color:#153;line-height:1.5}
+
+    /* testimonial stars */
+    .testi-stars{color:var(--primary);font-weight:700;margin-bottom:8px}
+    .testi-stars .empty{color:#e6e6e6;font-weight:600}
+
+    /* audience (À qui on s’adresse ?) */
+    .audience-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));align-items:stretch}
+    .audience-card{
+      background:linear-gradient(180deg,#fff,#fbfffb);
+      border-radius:16px;padding:22px;border:1px solid rgba(10,20,10,0.04);
+      box-shadow:0 12px 30px rgba(10,20,10,0.04);display:flex;flex-direction:column;gap:8px;min-height:140px;
+    }
+    .audience-card i{font-size:34px;color:var(--primary)}
+    .audience-card h4{margin:0;font-size:1.05rem;color:var(--dark)}
+    .audience-card p{margin:0;font-size:13px;color:var(--muted)}
+
+    /* footer */
+    footer{background:var(--dark);color:#fff;padding:60px 5%}
+    .footer-bottom{text-align:center;padding-top:22px;border-top:1px solid rgba(255,255,255,0.06);opacity:.85;margin-top:22px}
+
+    /* glass modal (glassform) */
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(3,6,7,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:1500;
+    }
+    .modal-backdrop.active{display:flex}
+    .modal{
+      width:100%;max-width:720px;border-radius:14px;padding:26px;background:var(--glass-bg);
+      border:1px solid var(--glass-border);box-shadow:0 12px 40px rgba(10,20,10,0.25);
+      backdrop-filter: blur(10px) saturate(120%);color:#fff;
+    }
+    .modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .modal h3{margin:0;font-size:1.2rem}
+    .close-btn{background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .form-row .full{grid-column:1/-1}
+    label{display:block;font-size:13px;margin-bottom:6px;font-weight:600}
+    input[type="text"],input[type="email"],textarea,select{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.05);color:#fff;font-size:14px;outline:none;
+      transition:box-shadow .18s, transform .15s;
+    }
+    input:focus,textarea:focus,select:focus{box-shadow:0 6px 18px rgba(2,6,10,0.25);transform:translateY(-2px)}
+    textarea{min-height:110px;resize:vertical;border-radius:12px}
+    .modal .actions{display:flex;gap:12px;justify-content:flex-end;margin-top:8px}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.18);color:#fff;padding:10px 14px;border-radius:10px}
+    .btn-primary{background:var(--primary);border:0;color:#083115;padding:10px 14px;border-radius:10px;font-weight:700}
+
+    /* floating CTA */
+    .fab-request{
+      position:fixed;right:18px;bottom:18px;background:linear-gradient(180deg,var(--primary),var(--secondary));
+      color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 14px 40px rgba(39,174,96,0.22);display:flex;gap:10px;align-items:center;z-index:1400;font-weight:700;border:0;cursor:pointer;
+    }
+
+    /* floating summary (mobile) */
+    .summary-bar{display:none}
+    .summary-panel-mobile{display:none}
+
+    /* responsive */
+    @media (max-width:900px){
+      .form-row{grid-template-columns:1fr}
+      .gallery-item{flex:0 0 240px;height:320px}
+      .section-title{font-size:1.5rem}
+      .testi-card{flex-direction:column;gap:12px}
+      .audience-card{padding:18px}
+
+      /* show mobile toggle, hide inline links */
+      #nav-toggle{display:flex}
+      .nav-links{display:none} /* hide desktop inline links */
+      /* mobile nav panel styling */
+      nav.main-nav-mobile{display:none} /* shown by JS with .open */
+      .summary-bar{display:flex;position:fixed;left:12px;right:12px;bottom:18px;background:var(--dark);color:#fff;padding:12px;border-radius:12px;justify-content:space-between;align-items:center;z-index:1400;gap:12px}
+      .summary-bar .summary-btn{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff;padding:6px 10px;border-radius:999px;cursor:pointer}
+      .summary-panel-mobile{display:none;position:fixed;left:12px;right:12px;bottom:72px;background:var(--dark);color:#fff;padding:12px;border-radius:12px;z-index:1400;box-shadow:0 18px 40px rgba(0,0,0,0.4)}
+      .summary-panel-mobile.open{display:block}
+      footer{padding-bottom:120px} /* give space for floating panels */
+    }
+    @media (max-width:520px){
+      .testi-card img{width:56px;height:56px}
+      section{padding:48px 5%}
+    }
+    @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container" role="navigation" aria-label="Barre de navigation principale">
+      <a class="logo" href="#">VERTO<span>SITE</span></a>
+
+      <!-- Mobile toggle (three vertical bars side-by-side) -->
+      <button id="nav-toggle" aria-controls="mobile-nav" aria-expanded="false" aria-label="Ouvrir le menu">
+        <span class="nav-bar" aria-hidden="true"></span>
+        <span class="nav-bar" aria-hidden="true"></span>
+        <span class="nav-bar" aria-hidden="true"></span>
+      </button>
+
+      <!-- Inline links (desktop) -->
+      <nav class="nav-links" aria-label="Main">
+        <a href="#home">Accueil</a>
+        <a href="#digital">Digital</a>
+        <a href="#creatif">Identité</a>
+        <a href="#evenement">Événementiel</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#audience">Public</a>
+        <a href="#business">Business</a>
+        <a href="#testimonials">Avis</a>
+      </nav>
+
+      <!-- Mobile nav (same links, shown on small screens when toggled) -->
+      <nav id="mobile-nav" class="main-nav-mobile" aria-label="Menu mobile" aria-hidden="true">
+        <ul>
+          <li><a href="#home">Accueil</a></li>
+          <li><a href="#digital">Digital</a></li>
+          <li><a href="#creatif">Identité</a></li>
+          <li><a href="#evenement">Événementiel</a></li>
+          <li><a href="#galerie">Galerie</a></li>
+          <li><a href="#audience">Public</a></li>
+          <li><a href="#business">Business</a></li>
+          <li><a href="#testimonials">Avis</a></li>
+          <li><a href="#contact" id="mobile-contact-wa" style="display:block;padding:10px;border-radius:8px;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;font-weight:700;text-align:center;margin-top:6px">Contact WhatsApp</a></li>
+        </ul>
+      </nav>
+
+      <a class="btn-header-wa" href="https://wa.me/243903819371" aria-label="Contact WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i> Contact
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero" aria-label="Section d'accueil">
+      <div class="hero-content">
+        <span class="section-tag">VERTO TOOLS</span>
+        <h1>Votre business mérite d’être visible et professionnel en ligne</h1>
+        <p>Verto vous accompagne dans la création de votre identité numérique et vos supports visuels de haute qualité.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn-main" href="https://wa.me/243903819371?text=D%C3%A9marrer%20mon%20projet" aria-label="Démarrer mon projet">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Démarrer mon projet
+          </a>
+          <button class="fab-request open-modal" type="button" aria-haspopup="dialog" aria-controls="modal-request" data-service="PME établie - Sur devis" title="Demande de devis">
+            <i class="fas fa-file-signature" aria-hidden="true"></i> Demande de devis
+          </button>
+        </div>
+      </div>
+
+      <svg class="wave-divider" viewBox="0 0 1440 100" aria-hidden="true">
+        <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,100L1360,100C1280,100,1120,100,960,100C800,100,640,100,480,100C320,100,160,100,80,100L0,100Z"></path>
+      </svg>
+    </section>
+
+    <!-- SERVICES DIGITAL -->
+    <div class="service-bg" id="digital" aria-labelledby="digital-title">
+      <section>
+        <span class="section-tag">Digital & Web</span>
+        <h2 id="digital-title" class="section-title">Sites Web & Systèmes</h2>
+
+        <div class="grid-cards">
+          <article class="card" aria-labelledby="pack-visi">
+            <div>
+              <i class="fas fa-rocket" aria-hidden="true"></i>
+              <h3 id="pack-visi">Pack Visibilité</h3>
+              <p>Site d'une page optimisé pour référencement local et contact WhatsApp.</p>
+            </div>
+            <div>
+              <span class="price-tag">50$</span>
+              <a class="btn-wa-sm" href="https://wa.me/243903819371?text=Pack%20Visibilit%C3%A9%20-%20Je%20veux%20commander">Commander</a>
+            </div>
+          </article>
+
+          <article class="card" aria-labelledby="pack-biz">
+            <div>
+              <i class="fas fa-briefcase" aria-hidden="true"></i>
+              <h3 id="pack-biz">Pack Business</h3>
+              <p>Site complet (3–5 pages) pour PME, avec formulaire et intégration base.</p>
+            </div>
+            <div>
+              <span class="price-tag">150$</span>
+              <a class="btn-wa-sm" href="https://wa.me/243903819371?text=Pack%20Business%20-%20Je%20veux%20commander">Commander</a>
+            </div>
+          </article>
+
+          <article class="card" aria-labelledby="mini-sys">
+            <div>
+              <i class="fas fa-puzzle-piece" aria-hidden="true"></i>
+              <h3 id="mini-sys">Mini-Systèmes</h3>
+              <p>Solutions sur-mesure : caisse, gestion scolaire, gestion adhérents.</p>
+            </div>
+            <div>
+              <span class="price-tag">Dès 250$</span>
+              <a class="btn-wa-sm" href="https://wa.me/243903819371?text=Mini%20Syst%C3%A8me%20-%20Int%C3%A9ress%C3%A9">Commander</a>
+            </div>
+          </article>
+
+          <!-- Remplace "Grandes Entreprises" par "PME établie - Sur devis" -->
+          <article class="card" aria-labelledby="pme-devis">
+            <div>
+              <i class="fas fa-building" aria-hidden="true"></i>
+              <h3 id="pme-devis">PME établie</h3>
+              <p>Solutions complètes et intégrées pour PME — projet sur devis.</p>
+            </div>
+            <div>
+              <span class="badge-quote" aria-hidden="true">Sur devis</span>
+              <div style="margin-top:10px">
+                <!-- ouvre la modal pré-remplie sur "PME établie - Sur devis" -->
+                <button class="btn-wa-sm open-modal" data-service="PME établie - Sur devis" type="button">Demander un devis</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- DESIGN -->
+    <section id="creatif" aria-labelledby="creatif-title">
+      <span class="section-tag">Design Graphique</span>
+      <h2 id="creatif-title" class="section-title">Portraits & Cartes</h2>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px">
+        <div>
+          <h3>Tarifs Portraits Digitaux</h3>
+          <table class="pricing-table" role="table" aria-label="Tarifs portraits">
+            <thead><tr><th>Format</th><th>1 pers.</th><th>Couple</th></tr></thead>
+            <tbody>
+              <tr><td>A5</td><td>20 000 FC</td><td>35 000 FC</td></tr>
+              <tr><td>A4</td><td>30 000 FC</td><td>45 000 FC</td></tr>
+              <tr><td>A3</td><td>40 000 FC</td><td>55 000 FC</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card" style="border:1px solid rgba(0,0,0,0.04)">
+          <i class="fas fa-address-card" aria-hidden="true"></i>
+          <h3>Cartes de visite</h3>
+          <p>Design professionnel + QR Code interactif.</p>
+          <span class="price-tag">Design dès 25$</span>
+          <a class="btn-wa-sm" href="https://wa.me/243903819371?text=Cartes%20de%20visite%20-%20Int%C3%A9ress%C3%A9">Commander</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENEMENT -->
+    <div class="service-bg" id="evenement" aria-labelledby="evenement-title">
+      <section>
+        <span class="section-tag">Événementiel</span>
+        <h2 id="evenement-title" class="section-title">Affiches & Invitations</h2>
+
+        <div class="grid-cards">
+          <div class="card"><i class="fas fa-calendar-star" aria-hidden="true"></i><h3>Affiches & Flyers</h3><p>Formats print & web pour événements.</p><span class="price-tag">Dès 15$</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Affiches">Commander</a></div>
+          <div class="card"><i class="fas fa-heart" aria-hidden="true"></i><h3>Invitations Mariage</h3><p>Faire-part élégants (électronique + impression).</p><span class="price-tag">Dès 25$</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Invitations%20Mariage">Commander</a></div>
+          <div class="card"><i class="fas fa-envelope-open-text" aria-hidden="true"></i><h3>Invitations Diverses</h3><p>Baptêmes, anniversaires et autres.</p><span class="price-tag">Dès 20$</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Invitations%20Diverses">Commander</a></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- AUDIENCE / À QUI ON S'ADRESSE -->
+    <section id="audience" aria-labelledby="audience-title">
+      <span class="section-tag">Public cible</span>
+      <h2 id="audience-title" class="section-title">À qui on s’adresse ?</h2>
+
+      <p style="color:var(--muted);margin-bottom:18px;max-width:850px">Nous accompagnons des profils variés — des particuliers aux entreprises — avec des solutions adaptées à leurs besoins, leur budget et leur maturité digitale.</p>
+
+      <div class="audience-grid" role="list" aria-label="Catégories de clients">
+        <article class="audience-card" role="listitem" aria-labelledby="aud-1">
+          <div>
+            <i class="fas fa-user" aria-hidden="true"></i>
+            <h4 id="aud-1">Particuliers</h4>
+            <p>Présentez-vous en ligne avec élégance : portraits numériques, cartes personnelles et mini-sites pour projets personnels.</p>
+          </div>
+        </article>
+
+        <article class="audience-card" role="listitem" aria-labelledby="aud-2">
+          <div>
+            <i class="fas fa-calendar" aria-hidden="true"></i>
+            <h4 id="aud-2">Organisateurs d’événements</h4>
+            <p>Affiches, invitations et landing pages dédiées pour maximiser la visibilité et les inscriptions à vos événements.</p>
+          </div>
+        </article>
+
+        <article class="audience-card" role="listitem" aria-labelledby="aud-3">
+          <div>
+            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+            <h4 id="aud-3">Entrepreneurs et débutants</h4>
+            <p>Solutions simples, accompagnement pas-à-pas et packs visibilité pour lancer votre activité sans stress technique.</p>
+          </div>
+        </article>
+
+        <article class="audience-card" role="listitem" aria-labelledby="aud-4">
+          <div>
+            <i class="fas fa-building" aria-hidden="true"></i>
+            <h4 id="aud-4">PME et entreprises établies</h4>
+            <p>Offres sur-mesure, intégrations et projets sur devis pour digitaliser et professionnaliser vos services.</p>
+          </div>
+        </article>
+
+        <article class="audience-card" role="listitem" aria-labelledby="aud-5">
+          <div>
+            <i class="fas fa-hands-helping" aria-hidden="true"></i>
+            <h4 id="aud-5">Associations et ONG</h4>
+            <p>Communication claire et outils adaptés pour mobiliser, collecter des soutiens et gérer les membres.</p>
+          </div>
+        </article>
+
+        <article class="audience-card" role="listitem" aria-labelledby="aud-6">
+          <div>
+            <i class="fas fa-user-tie" aria-hidden="true"></i>
+            <h4 id="aud-6">Professionnels et gestionnaires</h4>
+            <p>Outils professionnels, tableaux de bord et formations pour gagner en efficacité et crédibilité.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GALERIE -->
+    <section id="galerie" aria-labelledby="galerie-title">
+      <span class="section-tag">Nos Réalisations</span>
+      <h2 id="galerie-title" class="section-title">Galerie Portraits</h2>
+
+      <div class="gallery-container">
+        <div class="gallery-scroll" role="list">
+          <figure class="gallery-item" role="listitem"><img alt="Portrait numérique, exemple 1" src="https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/1769270831048~2.jpg"></figure>
+          <figure class="gallery-item" role="listitem"><img alt="Portrait numérique, exemple 2" src="https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/1769269700156~2.jpg"></figure>
+          <figure class="gallery-item" role="listitem"><img alt="Portrait numérique, exemple 3" src="https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/1769282665512~2.jpg"></figure>
+          <figure class="gallery-item" role="listitem"><img alt="Design sample 1" src="https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/file_0000000041e471f7955ae0db3cda4ac8.png"></figure>
+          <figure class="gallery-item" role="listitem"><img alt="Design sample 2" src="https://raw.githubusercontent.com/emeraude-00/Imagesite-/main/file_00000000f6c471f8ad1f6f96712dca2b.png"></figure>
+        </div>
+        <p class="gallery-note"><i class="fas fa-info-circle" aria-hidden="true"></i> Ceci est un aperçu. Le meilleur rendu et la qualité optimale sont garantis lors de la commande.</p>
+      </div>
+    </section>
+
+    <!-- BUSINESS -->
+    <section id="business" aria-labelledby="business-title">
+      <span class="section-tag">Expertise</span>
+      <h2 id="business-title" class="section-title">Gestion & Business</h2>
+      <div class="grid-cards">
+        <div class="card"><i class="fas fa-file-invoice-dollar" aria-hidden="true"></i><h3>Business Plan</h3><p>Rédaction pour dossiers de financement.</p><span class="price-tag">Dès 80$</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Business%20Plan">Discuter</a></div>
+        <div class="card"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i><h3>Formation Excel</h3><p>Cours pratiques & exercices.</p><span class="price-tag">30$ / pers.</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Formation%20Excel">S'inscrire</a></div>
+        <div class="card"><i class="fas fa-table" aria-hidden="true"></i><h3>Outils Excel</h3><p>Tableaux de bord & automatisations.</p><span class="price-tag">Dès 40$</span><a class="btn-wa-sm" href="https://wa.me/243903819371?text=Outils%20Excel">Commander</a></div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS (juste avant le footer) -->
+    <section id="testimonials" aria-labelledby="testimonials-title">
+      <span class="section-tag">Avis clients</span>
+      <h2 id="testimonials-title" class="section-title">Témoignages clients</h2>
+
+      <!-- Témoignages modifiés : photos retirées, prénoms/noms congolais, pronoms, étoiles -->
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:900px;margin:0 auto;">
+        <article class="testi-card" aria-labelledby="t1-name" data-rating="5">
+          <div class="testi-content">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="t1-name" class="testi-name">Jean-Pierre Mbemba</div>
+              <div class="testi-pronoun">· il</div>
+            </div>
+            <div class="testi-stars" aria-hidden="true"></div>
+            <div class="testi-role">Entrepreneur — Boutique locale</div>
+            <div class="testi-text">"Verto nous a aidés à lancer notre site en quelques semaines : design pro, suivi humain et résultats rapides. Nos clients nous trouvent désormais plus facilement."</div>
+          </div>
+        </article>
+
+        <article class="testi-card" aria-labelledby="t2-name" data-rating="4">
+          <div class="testi-content">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="t2-name" class="testi-name">Aline Kisolokele</div>
+              <div class="testi-pronoun">· elle</div>
+            </div>
+            <div class="testi-stars" aria-hidden="true"></div>
+            <div class="testi-role">Responsable — ONG Locale</div>
+            <div class="testi-text">"Professionnalisme et écoute. Le partenariat a transformé notre communication : supports clairs et procédure simple."</div>
+          </div>
+        </article>
+
+        <article class="testi-card" aria-labelledby="t3-name" data-rating="5">
+          <div class="testi-content">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="t3-name" class="testi-name">Dieumerci Lumbala</div>
+              <div class="testi-pronoun">· il</div>
+            </div>
+            <div class="testi-stars" aria-hidden="true"></div>
+            <div class="testi-role">PME — Responsable IT</div>
+            <div class="testi-text">"Solution sur-mesure et accompagnement clair. Livraison dans les délais et excellent support après lancement."</div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div style="text-align:center">
+      <h3>VERTO SITE</h3>
+      <p>Rendre le digital professionnel accessible à tous.</p>
+      <p style="margin-top:12px;font-weight:700"><i class="fab fa-whatsapp" aria-hidden="true"></i> <a href="tel:+243903819371" style="color:inherit;text-decoration:none">+243 90 38 19 37 1</a></p>
+    </div>
+    <div class="footer-bottom">&copy; 2026 VERTO SITE – VERTO TOOLS. Tous droits réservés.</div>
+  </footer>
+
+  <!-- Modal glassform -->
+  <div class="modal-backdrop" id="modal-request" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="modal" role="document">
+      <header>
+        <h3 id="modal-title">Demande de devis / Contact</h3>
+        <button class="close-btn" id="close-modal" aria-label="Fermer">&times;</button>
+      </header>
+
+      <form id="request-form">
+        <div class="form-row">
+          <div>
+            <label for="name">Votre nom *</label>
+            <input id="name" name="name" type="text" required placeholder="Nom complet">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="exemple@domain.com">
+          </div>
+          <div class="full">
+            <label for="company">Entreprise (optionnel)</label>
+            <input id="company" name="company" type="text" placeholder="Nom de la société">
+          </div>
+          <div class="full">
+            <label for="service">Service / Projet</label>
+            <select id="service" name="service">
+              <option>Pack Visibilité</option>
+              <option>Pack Business</option>
+              <option>Mini-Systèmes</option>
+              <option>PME établie - Sur devis</option>
+              <option>Design & Cartes</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Décrivez votre projet ou question..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal actions" style="align-items:center;justify-content:space-between">
+          <div style="color:rgba(255,255,255,0.8);font-size:13px">Nous répondons sous 48h en général.</div>
+          <div>
+            <button type="button" class="btn-ghost" id="cancel-modal">Annuler</button>
+            <button type="submit" class="btn-primary">Envoyer la demande</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <button class="fab-request open-modal" type="button" aria-haspopup="dialog" aria-controls="modal-request" data-service="Demande rapide" title="Demande de devis rapide">
+    <i class="fas fa-file-signature" aria-hidden="true"></i> Demande de devis
+  </button>
+
+  <div id="summary-panel-mobile" class="summary-panel-mobile" role="region" aria-hidden="true">
+    <strong>Nos services principaux :</strong>
+    <ul style="margin:8px 0 0 18px;color:#fff">
+      <li>Conseil digital — stratégie & marketing</li>
+      <li>Galerie & événements — organisation & exposition</li>
+      <li>Formation — ateliers & e-learning</li>
+    </ul>
+  </div>
+
+  <script>
+    // Detect OS & viewport class (mobile/desktop) for fine tuning if needed
+    (function detectEnvironment(){
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const html = document.documentElement;
+      if (/android/i.test(ua)) html.classList.add('android');
+      else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) html.classList.add('ios');
+
+      function updateViewportClass(){
+        if (window.innerWidth <= parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-break'),10)) {
+          html.classList.add('mobile');
+          html.classList.remove('desktop');
+        } else {
+          html.classList.add('desktop');
+          html.classList.remove('mobile');
+        }
+      }
+      updateViewportClass();
+      window.addEventListener('resize', updateViewportClass);
+    })();
+
+    // Mobile nav toggle (uses #nav-toggle and #mobile-nav)
+    (function mobileNav(){
+      const toggle = document.getElementById('nav-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      const mobileContact = document.getElementById('mobile-contact-wa');
+
+      function setAria(open) {
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        mobileNav.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+
+      if (!toggle || !mobileNav) return;
+
+      toggle.addEventListener('click', function(e){
+        const opened = mobileNav.classList.toggle('open');
+        setAria(opened);
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', function(e){
+        if (!mobileNav.contains(e.target) && !toggle.contains(e.target) && mobileNav.classList.contains('open')) {
+          mobileNav.classList.remove('open');
+          setAria(false);
+        }
+      });
+
+      // Close on link click (so user sees the section)
+      mobileNav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          mobileNav.classList.remove('open');
+          setAria(false);
+        });
+      });
+
+      // Mobile contact direct link: ensure WhatsApp link works on mobile
+      if (mobileContact) {
+        mobileContact.addEventListener('click', function(e){
+          e.preventDefault();
+          window.location.href = 'https://wa.me/243903819371';
+        });
+      }
+    })();
+
+    // Render stars for testimonial cards (data-rating attribute)
+    (function renderTestimonialStars(){
+      document.querySelectorAll('.testi-card').forEach(card => {
+        const rating = parseInt(card.getAttribute('data-rating') || '0', 10);
+        const container = card.querySelector('.testi-stars');
+        if (!container) return;
+        let html = '';
+        for (let i=1;i<=5;i++){
+          if (i<=rating) html += '<span aria-hidden="true">★</span>';
+          else html += '<span class="empty" aria-hidden="true">★</span>';
+        }
+        container.innerHTML = html;
+        // Add aria-label for accessibility
+        container.setAttribute('aria-label', 'Note : ' + rating + ' sur 5');
+      });
+    })();
+
+    // Summary mobile toggle
+    (function summaryToggle(){
+      const toggle = document.getElementById('summary-toggle');
+      const panel = document.getElementById('summary-panel-mobile');
+      if (!toggle || !panel) return;
+      toggle.addEventListener('click', function(){
+        const open = panel.classList.toggle('open');
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.textContent = open ? 'Fermer' : 'Voir';
+      });
+
+      // hide summary bar on desktop (in case of resize)
+      function update(){
+        const bar = document.querySelector('.summary-bar');
+        if (!bar) return;
+        if (window.innerWidth <= parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-break'),10)) {
+          bar.style.display = 'flex';
+        } else {
+          bar.style.display = 'none';
+          // ensure panel closed
+          panel.classList.remove('open');
+          panel.setAttribute('aria-hidden','true');
+          toggle.setAttribute('aria-expanded','false');
+          toggle.textContent = 'Voir';
+        }
+      }
+      update(); window.addEventListener('resize', update);
+    })();
+
+    // Modal open/close and prefill service from data-service attributes (preserve original behavior)
+    (function modalHandler(){
+      const modal = document.getElementById('modal-request');
+      const closeBtn = document.getElementById('close-modal');
+      const cancelBtn = document.getElementById('cancel-modal');
+      const openers = document.querySelectorAll('.open-modal');
+      const serviceSelect = document.getElementById('service');
+
+      function openModal(prefill) {
+        if (prefill && serviceSelect) {
+          const found = Array.from(serviceSelect.options).find(o => o.textContent.trim().toLowerCase() === prefill.trim().toLowerCase());
+          if (found) serviceSelect.value = found.value;
+          else {
+            serviceSelect.value = 'Autre';
+            const msg = document.getElementById('message');
+            if (msg && prefill) msg.value = prefill + "\\n\\n" + (msg.value || '');
+          }
+        }
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        // focus first input
+        const first = modal.querySelector('input, textarea, select, button');
+        if (first) first.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }
+
+      openers.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const svc = btn.getAttribute('data-service') || '';
+          openModal(svc);
+        });
+      });
+
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.getElementById('request-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        // For production: replace with proper AJAX submit to your backend or send to WhatsApp/email
+        alert('Merci ! Votre demande a été prise en compte. Nous revenons vers vous rapidement.');
+        closeModal();
+        this.reset();
+      });
+    })();
+
+    // Accessibility: close open mobile nav or panels on ESC
+    (function globalKeyHandler(){
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          const mobileNav = document.getElementById('mobile-nav');
+          if (mobileNav && mobileNav.classList.contains('open')) {
+            mobileNav.classList.remove('open');
+            mobileNav.setAttribute('aria-hidden','true');
+            document.getElementById('nav-toggle').setAttribute('aria-expanded','false');
+          }
+          const modal = document.getElementById('modal-request');
+          if (modal && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden','true');
+            document.body.style.overflow = '';
+          }
+          const panel = document.getElementById('summary-panel-mobile');
+          if (panel && panel.classList.contains('open')) {
+            panel.classList.remove('open');
+            panel.setAttribute('aria-hidden','true');
+            document.getElementById('summary-toggle').setAttribute('aria-expanded','false');
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
